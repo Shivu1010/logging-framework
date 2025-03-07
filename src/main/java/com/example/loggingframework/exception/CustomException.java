@@ -1,4 +1,10 @@
 package com.example.loggingframework.exception;
 
-public class CustomException {
+/**
+ * Custom exception for the application.
+ */
+public class CustomException extends RuntimeException {
+    public CustomException(String message) {
+        super(message);
+    }
 }
