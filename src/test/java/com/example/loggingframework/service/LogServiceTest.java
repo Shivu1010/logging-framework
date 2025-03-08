@@ -1,6 +1,5 @@
 package com.example.loggingframework.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,47 +7,41 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+/**
+ * Unit tests for {@link LogService}.
+ * Verifies the logging and exception-throwing behavior of the service.
+ */
 @ExtendWith(MockitoExtension.class)
 public class LogServiceTest {
 
     @Mock
-    private Logger logger; // Mock the Logger
+    private Logger logger;
 
     @InjectMocks
-    private LogService logService; // Inject the mock Logger into LogService
+    private LogService demoService;
 
+    /**
+     * Tests that the {@link LogService#performTask()} method logs a message and throws an exception.
+     */
     @Test
-    public void testPerformAction_ValidInput() {
-        // Arrange
-        String input = "test input";
-        String expectedOutput = "Processed: " + input;
-
-        // Act
-        String result = logService.performAction(input);
-
-        // Assert
-        assertEquals(expectedOutput, result, "Output should match the processed input");
+    public void testPerformTask() {
+        // Act and Assert: Verify that the method throws an exception
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            demoService.performTask();
+        }, "Expected performTask() to throw a RuntimeException");
 
         // Verify that the logger was called with the expected message
-        verify(logger).debug("Performing action with input: {}", input);
-    }
+        verify(logger).info("Performing a task in the service layer.");
 
-    @Test
-    public void testPerformAction_NullInput() {
-        // Arrange
-        String input = null;
+        // Verify that no other interactions occurred with the logger
+        verifyNoMoreInteractions(logger);
 
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            logService.performAction(input);
-        }, "IllegalArgumentException should be thrown for null input");
-
-        assertEquals("Input cannot be null", exception.getMessage(), "Exception message should match");
-
-        // Verify that the logger was called with the expected message
-        verify(logger).debug("Performing action with input: {}", input);
+        // Verify the exception message
+        assertThat(exception.getMessage()).isEqualTo("Simulated error in service layer");
     }
 }

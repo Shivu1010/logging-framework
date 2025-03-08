@@ -47,10 +47,9 @@ public class LogController {
      * @param input The input string to be processed. Must not be {@code null}.
      * @return A string representing the processed input.
      * @throws IllegalArgumentException If the input is {@code null}.
-     * @see LogService#performAction(String)
      */
     @GetMapping("/process")
     public String processInput(@RequestParam String input) {
-        return demoService.performAction(input);
+        return LogService.performAction(input);
     }
 }
